@@ -5,16 +5,27 @@ import type { Dream } from "@/lib/types";
 import { CATEGORY_ART, SITE } from "@/lib/config";
 import type { Workspace } from "@/hooks/useWorkspace";
 import { fmtDate } from "@/lib/format";
-import { SectionHeading, SignedImg } from "./ui";
+import { useState } from "react";
+import { Button, SectionHeading, SignedImg } from "./ui";
 import { DoodleStar } from "./doodles";
+import { KeepsakeBookModal } from "./KeepsakeBookModal";
 
 export function Done({ ws, onOpen }: { ws: Workspace; onOpen: (d: Dream) => void }) {
+  const [keepsakeOpen, setKeepsakeOpen] = useState(false);
   const done = ws.data.dreams.filter((d) => d.status === "completed");
 
   return (
     <section id="done" className="relative mt-28 scroll-mt-24 bg-sage-mist/50 py-20">
       <div className="mx-auto max-w-6xl px-6">
-        <SectionHeading eyebrow="Chapter two" title={SITE.doneHeading} sub={SITE.doneSub} />
+        <SectionHeading eyebrow="The book we write together" title="The memories we've made" sub="Completed dreams become illustrated pages in our growing storybook. Add actual photos, words, dates, and little drawings — or export them into a printable keepsake." />
+
+        {done.length > 0 && (
+          <div className="mb-10 text-center">
+            <Button variant="accent" onClick={() => setKeepsakeOpen(true)}>
+              <span>📖</span> Open Keepsake Book & Printable Album
+            </Button>
+          </div>
+        )}
 
         {done.length === 0 ? (
           <div className="mx-auto max-w-md rounded-[10px] border-2 border-dashed border-sage/70 bg-ivory/70 px-8 py-12 text-center">
@@ -65,6 +76,12 @@ export function Done({ ws, onOpen }: { ws: Workspace; onOpen: (d: Dream) => void
           </div>
         )}
       </div>
+
+      <KeepsakeBookModal
+        open={keepsakeOpen}
+        onClose={() => setKeepsakeOpen(false)}
+        ws={ws}
+      />
     </section>
   );
 }

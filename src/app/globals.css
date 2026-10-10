@@ -214,3 +214,20 @@ body::before {
 @media (min-width: 768px) {
   .tilt-l:hover, .tilt-r:hover { transform: rotate(0deg); }
 }
+
+@media print {
+  body {
+    background: #fff !important;
+    color: #222 !important;
+  }
+  header, footer, nav, button {
+    display: none !important;
+  }
+  .print-keepsake-container {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    max-width: 100% !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

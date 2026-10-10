@@ -12,6 +12,10 @@ import type {
   Profile,
   Relationship,
   SharedNote,
+  FutureLetter,
+  SavingsGoal,
+  SavingsContribution,
+  CalendarPlan,
   WorkspaceData,
 } from "@/lib/types";
 
@@ -25,6 +29,10 @@ const EMPTY: WorkspaceData = {
   favorites: [],
   places: [],
   notes: [],
+  futureLetters: [],
+  savingsGoals: [],
+  savingsContributions: [],
+  calendarPlans: [],
 };
 
 function upsert<T extends { id: string }>(rows: T[], row: T): T[] {
@@ -83,7 +91,7 @@ export function useWorkspace() {
     }
     relIdRef.current = relId;
 
-    const [rel, profiles, categories, dreams, favorites, places, notes, myProfile] =
+    const [rel, profiles, categories, dreams, favorites, places, notes, futureLetters, savingsGoals, savingsContribs, calendarPlans, myProfile] =
       await Promise.all([
         sb.from("relationships").select("*").eq("id", relId).maybeSingle(),
         sb.from("profiles").select("*").order("created_at"),
@@ -92,6 +100,10 @@ export function useWorkspace() {
         sb.from("item_favorites").select("*"),
         sb.from("locations").select("*").eq("relationship_id", relId).order("created_at", { ascending: false }),
         sb.from("shared_notes").select("*").eq("relationship_id", relId).order("created_at", { ascending: false }),
+        sb.from("future_letters").select("*").eq("relationship_id", relId).order("reveal_at", { ascending: true }),
+        sb.from("savings_goals").select("*").eq("relationship_id", relId).order("created_at", { ascending: false }),
+        sb.from("savings_contributions").select("*").eq("relationship_id", relId).order("created_at", { ascending: false }),
+        sb.from("calendar_plans").select("*").eq("relationship_id", relId).order("start_date", { ascending: true }),
         sb.from("profiles").select("*").eq("id", uid).maybeSingle(),
       ]);
 
@@ -104,13 +116,17 @@ export function useWorkspace() {
       favorites: (favorites.data ?? []).filter((f: Favorite) => itemIds.has(f.item_id)),
       places: places.data ?? [],
       notes: notes.data ?? [],
+      futureLetters: futureLetters.data ?? [],
+      savingsGoals: savingsGoals.data ?? [],
+      savingsContributions: savingsContribs.data ?? [],
+      calendarPlans: calendarPlans.data ?? [],
     });
     setMe(myProfile.data ?? { id: uid, display_name: session.user.email?.split("@")[0] ?? "me", avatar_url: null, created_at: new Date().toISOString() });
     setLoading(false);
 
     // ------------------------------------------------ realtime
     const apply =
-      (key: "dreams" | "categories" | "places" | "notes") =>
+      (key: "dreams" | "categories" | "places" | "notes" | "futureLetters" | "savingsGoals" | "savingsContributions" | "calendarPlans") =>
       (payload: { eventType: string; new: unknown; old: unknown }) => {
         setData((prev) => {
           if (payload.eventType === "DELETE") {
@@ -128,6 +144,10 @@ export function useWorkspace() {
       .on("postgres_changes", { event: "*", schema: "public", table: "categories", filter: `relationship_id=eq.${relId}` }, apply("categories"))
       .on("postgres_changes", { event: "*", schema: "public", table: "locations", filter: `relationship_id=eq.${relId}` }, apply("places"))
       .on("postgres_changes", { event: "*", schema: "public", table: "shared_notes", filter: `relationship_id=eq.${relId}` }, apply("notes"))
+      .on("postgres_changes", { event: "*", schema: "public", table: "future_letters", filter: `relationship_id=eq.${relId}` }, apply("futureLetters"))
+      .on("postgres_changes", { event: "*", schema: "public", table: "savings_goals", filter: `relationship_id=eq.${relId}` }, apply("savingsGoals"))
+      .on("postgres_changes", { event: "*", schema: "public", table: "savings_contributions", filter: `relationship_id=eq.${relId}` }, apply("savingsContributions"))
+      .on("postgres_changes", { event: "*", schema: "public", table: "calendar_plans", filter: `relationship_id=eq.${relId}` }, apply("calendarPlans"))
       .on("postgres_changes", { event: "*", schema: "public", table: "relationships", filter: `id=eq.${relId}` }, (payload: { eventType: string; new: unknown }) => {
         if (payload.eventType !== "DELETE") {
           setData((prev) => ({ ...prev, relationship: payload.new as Relationship }));
@@ -351,6 +371,74 @@ export function useWorkspace() {
     return guard(error, "Note removed.");
   }, []);
 
+  const addFutureLetter = useCallback(async (input: { title: string; content: string; reveal_at: string; delivery_years?: number }) => {
+    const relId = relIdRef.current;
+    if (!relId) return;
+    const { error } = await supabase().from("future_letters").insert({ ...input, relationship_id: relId });
+    return guard(error, "Sealed in our time capsule.");
+  }, []);
+
+  const updateFutureLetter = useCallback(async (id: string, patch: Partial<FutureLetter>) => {
+    const { error } = await supabase().from("future_letters").update(patch).eq("id", id);
+    return guard(error, "Letter updated.");
+  }, []);
+
+  const deleteFutureLetter = useCallback(async (id: string) => {
+    const { error } = await supabase().from("future_letters").delete().eq("id", id);
+    return guard(error, "Time capsule letter removed.");
+  }, []);
+
+  const addSavingsGoal = useCallback(async (input: Partial<SavingsGoal>) => {
+    const relId = relIdRef.current;
+    if (!relId) return;
+    const { error } = await supabase().from("savings_goals").insert({ ...input, relationship_id: relId });
+    return guard(error, "Savings goal tucked in.");
+  }, []);
+
+  const updateSavingsGoal = useCallback(async (id: string, patch: Partial<SavingsGoal>) => {
+    const { error } = await supabase().from("savings_goals").update(patch).eq("id", id);
+    return guard(error);
+  }, []);
+
+  const deleteSavingsGoal = useCallback(async (id: string) => {
+    const { error } = await supabase().from("savings_goals").delete().eq("id", id);
+    return guard(error, "Savings goal removed.");
+  }, []);
+
+  const addContribution = useCallback(async (input: { goal_id: string; amount: number; currency: string; note?: string | null }) => {
+    const relId = relIdRef.current;
+    if (!relId) return;
+    const { error } = await supabase().from("savings_contributions").insert({ ...input, relationship_id: relId });
+    return guard(error, "Contribution logged with love.");
+  }, []);
+
+  const deleteContribution = useCallback(async (id: string) => {
+    const { error } = await supabase().from("savings_contributions").delete().eq("id", id);
+    return guard(error, "Contribution removed.");
+  }, []);
+
+  const addCalendarPlan = useCallback(async (input: Partial<CalendarPlan>) => {
+    const relId = relIdRef.current;
+    if (!relId) return;
+    const { error } = await supabase().from("calendar_plans").insert({ ...input, relationship_id: relId });
+    return guard(error, "Saved to our someday calendar.");
+  }, []);
+
+  const updateCalendarPlan = useCallback(async (id: string, patch: Partial<CalendarPlan>) => {
+    const { error } = await supabase().from("calendar_plans").update(patch).eq("id", id);
+    return guard(error);
+  }, []);
+
+  const deleteCalendarPlan = useCallback(async (id: string) => {
+    const { error } = await supabase().from("calendar_plans").delete().eq("id", id);
+    return guard(error, "Calendar plan removed.");
+  }, []);
+
+  const updateDreamDoodle = useCallback(async (id: string, doodle: string) => {
+    const { error } = await supabase().from("bucket_list_items").update({ doodle }).eq("id", id);
+    return guard(error, "Little drawing tucked in.");
+  }, []);
+
   const seedStarters = useCallback(
     async (items: { title: string; icon: string; priority?: string }[]) => {
       const relId = relIdRef.current;
@@ -398,6 +486,18 @@ export function useWorkspace() {
       addNote,
       updateNote,
       deleteNote,
+      addFutureLetter,
+      updateFutureLetter,
+      deleteFutureLetter,
+      addSavingsGoal,
+      updateSavingsGoal,
+      deleteSavingsGoal,
+      addContribution,
+      deleteContribution,
+      addCalendarPlan,
+      updateCalendarPlan,
+      deleteCalendarPlan,
+      updateDreamDoodle,
       seedStarters,
     },
   };

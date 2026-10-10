@@ -42,6 +42,7 @@ export type Dream = {
   estimated_budget: number | null;
   private_note: string | null;
   tags: string[];
+  doodle?: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -82,6 +83,64 @@ export type SharedNote = {
   updated_at: string;
 };
 
+export type FutureLetter = {
+  id: string;
+  relationship_id: string;
+  created_by: string;
+  title: string;
+  content: string;
+  reveal_at: string;
+  delivery_years: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CurrencyCode = "INR" | "PHP" | "USD" | "EUR" | "GBP";
+
+export type SavingsGoalCategory = "tickets" | "trip" | "experience" | "stay" | "special";
+
+export type SavingsGoal = {
+  id: string;
+  relationship_id: string;
+  bucket_list_item_id: string | null;
+  title: string;
+  target_amount: number;
+  currency: CurrencyCode;
+  category: SavingsGoalCategory;
+  notes: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type SavingsContribution = {
+  id: string;
+  goal_id: string;
+  relationship_id: string;
+  user_id: string;
+  amount: number;
+  currency: CurrencyCode;
+  note: string | null;
+  created_at: string;
+};
+
+export type CalendarPlanType = "tentative" | "planned" | "confirmed" | "anniversary" | "trip";
+
+export type CalendarPlan = {
+  id: string;
+  relationship_id: string;
+  bucket_list_item_id: string | null;
+  title: string;
+  start_date: string;
+  end_date: string | null;
+  plan_type: CalendarPlanType;
+  location: string | null;
+  notes: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+};
+
 export type WorkspaceData = {
   relationship: Relationship | null;
   profiles: Profile[];
@@ -90,4 +149,8 @@ export type WorkspaceData = {
   favorites: Favorite[];
   places: Place[];
   notes: SharedNote[];
+  futureLetters: FutureLetter[];
+  savingsGoals: SavingsGoal[];
+  savingsContributions: SavingsContribution[];
+  calendarPlans: CalendarPlan[];
 };

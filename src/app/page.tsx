@@ -12,6 +12,9 @@ import { Dreams } from "@/components/Dreams";
 import { DreamDetail, CompleteDialog, Celebration } from "@/components/DreamDetail";
 import { DreamForm, type DreamFormState } from "@/components/DreamForm";
 import { Done } from "@/components/Done";
+import { SavingsGoals } from "@/components/SavingsGoals";
+import { CalendarSection } from "@/components/Calendar";
+import { FutureLetters } from "@/components/FutureLetters";
 import { Places } from "@/components/Places";
 import { Notes } from "@/components/Notes";
 import { Onboarding } from "@/components/Onboarding";
@@ -48,15 +51,18 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       {/* top bar */}
-      <header className="sticky top-0 z-50 border-b border-ink/10 bg-paper/85 backdrop-blur-sm">
+      <header className="sticky top-0 z-50 border-b border-ink/10 bg-paper/85 backdrop-blur-sm print:hidden">
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-6 py-3">
           <a href="#top" className="font-serif text-xl font-semibold italic text-forest">
             Our Bucket List
           </a>
           <span className="hand-note hidden text-base text-ink-faint sm:block">· {SITE.partnerLine}</span>
-          <nav className="ml-auto hidden items-center gap-5 text-xs font-medium tracking-wide text-ink-soft md:flex" aria-label="Chapters">
+          <nav className="ml-auto hidden items-center gap-4 text-xs font-medium tracking-wide text-ink-soft md:flex" aria-label="Chapters">
             <a className="hover:text-forest" href="#dreams">Dreams</a>
-            <a className="hover:text-forest" href="#done">Done</a>
+            <a className="hover:text-forest" href="#done">Keepsake</a>
+            <a className="hover:text-forest" href="#savings">Saving</a>
+            <a className="hover:text-forest" href="#calendar">Calendar</a>
+            <a className="hover:text-forest" href="#future-letters">Time Capsule</a>
             <a className="hover:text-forest" href="#places">Places</a>
             <a className="hover:text-forest" href="#notes">Notes</a>
           </nav>
@@ -78,6 +84,9 @@ export default function Home() {
 
       <Dreams ws={ws} onAdd={openAdd} onOpen={setDetail} />
       <Done ws={ws} onOpen={setDetail} />
+      <SavingsGoals ws={ws} />
+      <CalendarSection ws={ws} />
+      <FutureLetters ws={ws} />
       <Places
         ws={ws}
         onOpenDreamTitle={(title) => {
