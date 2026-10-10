@@ -91,7 +91,13 @@ export function Hero({ onAdd }: { onAdd: () => void }) {
           aria-label={`${SITE.partnerLine}, ${SITE.routeLine}`}
         >
           <figure className="stamp tilt-l relative p-1.5 pb-2">
-            <Image src="/art/stamp-india.jpg" alt="Painted postage stamp with a marigold, from India" width={76} height={84} className="h-16 w-14 object-cover sm:h-20 sm:w-[70px]" />
+            <Image
+              src="/art/razal.jpg"
+              alt="Photo of Razal"
+              width={76}
+              height={84}
+              className="h-16 w-14 rounded-[2px] object-cover object-center sm:h-20 sm:w-[70px]"
+            />
             <figcaption className="hand-note mt-1 text-center text-sm leading-none">Razal</figcaption>
           </figure>
 
@@ -101,7 +107,13 @@ export function Hero({ onAdd }: { onAdd: () => void }) {
           </svg>
 
           <figure className="stamp tilt-r relative p-1.5 pb-2">
-            <Image src="/art/stamp-philippines.jpg" alt="Painted postage stamp with a sampaguita flower, from the Philippines" width={76} height={84} className="h-16 w-14 object-cover sm:h-20 sm:w-[70px]" />
+            <Image
+              src="/art/julian.jpg"
+              alt="Photo of Julian"
+              width={76}
+              height={84}
+              className="h-16 w-14 rounded-[2px] object-cover object-center sm:h-20 sm:w-[70px]"
+            />
             <figcaption className="hand-note mt-1 text-center text-sm leading-none">Julian</figcaption>
           </figure>
         </motion.div>
