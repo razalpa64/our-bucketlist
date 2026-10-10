@@ -8,13 +8,13 @@ for (const line of readFileSync(new URL("../.env.setup", import.meta.url), "utf8
 }
 
 const { DATABASE_URL } = env;
-const sql = readFileSync(new URL("../supabase/migrations/0004_features.sql", import.meta.url), "utf8");
+const sql = readFileSync(new URL("../supabase/migrations/0005_fix_rls.sql", import.meta.url), "utf8");
 
 const client = new pg.Client({ connectionString: DATABASE_URL, ssl: { rejectUnauthorized: false } });
 await client.connect();
 console.log("→ connected to Supabase Postgres");
 
 await client.query(sql);
-console.log("✓ migration 0004_features.sql applied successfully");
+console.log("✓ migration 0005_fix_rls.sql applied successfully");
 
 await client.end();

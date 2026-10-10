@@ -71,6 +71,8 @@ export function Modal({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const lastActive = useRef<Element | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     if (!open) return;
@@ -82,13 +84,9 @@ export function Modal({
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         ) ?? []
       ).filter((f) => !f.hasAttribute("disabled"));
-    const isTouch = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
-    if (!isTouch) {
-      setTimeout(() => focusables()[0]?.focus(), 30);
-    }
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
       if (e.key === "Tab") {
         const f = focusables();
         if (!f.length) return;
@@ -104,13 +102,14 @@ export function Modal({
       }
     };
     document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      document.body.style.overflow = prevOverflow;
       (lastActive.current as HTMLElement | null)?.focus?.();
     };
-  }, [open, onClose]);
+  }, [open]);
 
   return createPortal(
     <AnimatePresence>

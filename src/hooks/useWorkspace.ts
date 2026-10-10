@@ -374,9 +374,13 @@ export function useWorkspace() {
   const addFutureLetter = useCallback(async (input: { title: string; content: string; reveal_at: string; delivery_years?: number }) => {
     const relId = relIdRef.current;
     if (!relId) return;
-    const { error } = await supabase().from("future_letters").insert({ ...input, relationship_id: relId });
+    const { error } = await supabase().from("future_letters").insert({
+      ...input,
+      relationship_id: relId,
+      ...(me?.id ? { created_by: me.id } : {}),
+    });
     return guard(error, "Sealed in our time capsule.");
-  }, []);
+  }, [me?.id]);
 
   const updateFutureLetter = useCallback(async (id: string, patch: Partial<FutureLetter>) => {
     const { error } = await supabase().from("future_letters").update(patch).eq("id", id);
@@ -391,9 +395,13 @@ export function useWorkspace() {
   const addSavingsGoal = useCallback(async (input: Partial<SavingsGoal>) => {
     const relId = relIdRef.current;
     if (!relId) return;
-    const { error } = await supabase().from("savings_goals").insert({ ...input, relationship_id: relId });
+    const { error } = await supabase().from("savings_goals").insert({
+      ...input,
+      relationship_id: relId,
+      ...(me?.id ? { created_by: me.id } : {}),
+    });
     return guard(error, "Savings goal tucked in.");
-  }, []);
+  }, [me?.id]);
 
   const updateSavingsGoal = useCallback(async (id: string, patch: Partial<SavingsGoal>) => {
     const { error } = await supabase().from("savings_goals").update(patch).eq("id", id);
@@ -408,9 +416,13 @@ export function useWorkspace() {
   const addContribution = useCallback(async (input: { goal_id: string; amount: number; currency: string; note?: string | null }) => {
     const relId = relIdRef.current;
     if (!relId) return;
-    const { error } = await supabase().from("savings_contributions").insert({ ...input, relationship_id: relId });
+    const { error } = await supabase().from("savings_contributions").insert({
+      ...input,
+      relationship_id: relId,
+      ...(me?.id ? { user_id: me.id } : {}),
+    });
     return guard(error, "Contribution logged with love.");
-  }, []);
+  }, [me?.id]);
 
   const deleteContribution = useCallback(async (id: string) => {
     const { error } = await supabase().from("savings_contributions").delete().eq("id", id);
@@ -420,9 +432,13 @@ export function useWorkspace() {
   const addCalendarPlan = useCallback(async (input: Partial<CalendarPlan>) => {
     const relId = relIdRef.current;
     if (!relId) return;
-    const { error } = await supabase().from("calendar_plans").insert({ ...input, relationship_id: relId });
+    const { error } = await supabase().from("calendar_plans").insert({
+      ...input,
+      relationship_id: relId,
+      ...(me?.id ? { created_by: me.id } : {}),
+    });
     return guard(error, "Saved to our someday calendar.");
-  }, []);
+  }, [me?.id]);
 
   const updateCalendarPlan = useCallback(async (id: string, patch: Partial<CalendarPlan>) => {
     const { error } = await supabase().from("calendar_plans").update(patch).eq("id", id);
