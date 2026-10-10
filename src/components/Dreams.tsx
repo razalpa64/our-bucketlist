@@ -26,7 +26,7 @@ export function Dreams({
   const [view, setView] = useState<View>("all");
   const [cat, setCat] = useState<string>("");
   const [prio, setPrio] = useState<string>("");
-  const [sort, setSort] = useState<string>("newest");
+  const [sort, setSort] = useState<string>("oldest");
   const [q, setQ] = useState("");
   const [surprise, setSurprise] = useState<Dream | null>(null);
   const [catsOpen, setCatsOpen] = useState(false);
@@ -63,7 +63,7 @@ export function Dreams({
     setSurprise(pick);
   };
 
-  const anyFilter = view !== "all" || cat || prio || q;
+  const anyFilter = view !== "all" || cat || prio || q || sort !== "oldest";
 
   return (
     <section id="dreams" className="mx-auto max-w-6xl scroll-mt-24 px-6 pt-24">
@@ -141,8 +141,8 @@ export function Dreams({
           <label className="flex items-center gap-1.5">
             <span className="uppercase tracking-wider">Sort</span>
             <select value={sort} onChange={(e) => setSort(e.target.value)} className="field-input !w-auto !py-1 text-xs">
-              <option value="newest">Newest first</option>
-              <option value="oldest">Oldest first</option>
+              <option value="oldest">Old to new</option>
+              <option value="newest">New to old</option>
               <option value="priority">By priority</option>
             </select>
           </label>
@@ -150,7 +150,7 @@ export function Dreams({
             <button
               className="underline decoration-sage underline-offset-4 hover:text-forest"
               onClick={() => {
-                setView("all"); setCat(""); setPrio(""); setQ(""); setSort("newest");
+                setView("all"); setCat(""); setPrio(""); setQ(""); setSort("oldest");
               }}
             >
               clear

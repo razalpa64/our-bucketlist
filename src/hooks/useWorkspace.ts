@@ -96,7 +96,7 @@ export function useWorkspace() {
         sb.from("relationships").select("*").eq("id", relId).maybeSingle(),
         sb.from("profiles").select("*").order("created_at"),
         sb.from("categories").select("*").eq("relationship_id", relId).order("sort_order"),
-        sb.from("bucket_list_items").select("*").eq("relationship_id", relId).order("created_at", { ascending: false }),
+        sb.from("bucket_list_items").select("*").eq("relationship_id", relId).order("created_at", { ascending: true }),
         sb.from("item_favorites").select("*"),
         sb.from("locations").select("*").eq("relationship_id", relId).order("created_at", { ascending: false }),
         sb.from("shared_notes").select("*").eq("relationship_id", relId).order("created_at", { ascending: false }),
