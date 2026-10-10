@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f7f2e8;
+  --color-ivory: #fffdf7;
+  --color-forest: #354a3c;
+  --color-forest-deep: #26382c;
+  --color-sage: #a6b29a;
+  --color-sage-soft: #ccd4c2;
+  --color-sage-mist: #e4e8dc;
+  --color-terracotta: #bf7967;
+  --color-terracotta-deep: #a25f4e;
+  --color-rose: #d9a9a0;
+  --color-rose-soft: #ecd8d3;
+  --color-ink: #443a32;
+  --color-ink-soft: #75685a;
+  --color-ink-faint: #a2968a;
+  --color-ochre: #c5a365;
+  --color-ochre-soft: #e6d7b8;
+
+  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-hand: "Caveat", "Segoe Script", cursive;
+
+  --shadow-paper: 0 1px 2px rgba(68, 58, 50, 0.07), 0 10px 28px -14px rgba(68, 58, 50, 0.28);
+  --shadow-lift: 0 2px 5px rgba(68, 58, 50, 0.09), 0 22px 44px -18px rgba(68, 58, 50, 0.34);
+  --shadow-pin: 0 1px 1px rgba(68, 58, 50, 0.2), 0 6px 14px -6px rgba(68, 58, 50, 0.35);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* grainy paper texture over everything, very quiet */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.27 0 0 0 0 0.23 0 0 0 0 0.19 0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: rgba(166, 178, 154, 0.45);
+  color: var(--color-forest-deep);
+}
+
+:focus-visible {
+  outline: 2px dashed var(--color-terracotta);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ------------------------------------------------------------- surfaces */
+
+.paper-card {
+  background: var(--color-ivory);
+  border: 1px solid rgba(68, 58, 50, 0.13);
+  border-radius: 6px 10px 7px 12px;
+  box-shadow: var(--shadow-paper);
+}
+
+.paper-card-deep {
+  background: var(--color-ivory);
+  border: 1px solid rgba(68, 58, 50, 0.16);
+  border-radius: 8px 14px 9px 15px;
+  box-shadow: var(--shadow-lift);
+}
+
+.hand-note {
+  font-family: var(--font-hand);
+  color: var(--color-ink-soft);
+}
+
+.stamp {
+  border: 1px solid rgba(68, 58, 50, 0.2);
+  outline: 1px dashed rgba(68, 58, 50, 0.35);
+  outline-offset: -6px;
+  box-shadow: var(--shadow-pin);
+  background: var(--color-ivory);
+}
+
+.washi {
+  position: absolute;
+  width: 84px;
+  height: 22px;
+  opacity: 0.8;
+  transform: rotate(-4deg);
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(197, 163, 101, 0.55),
+    rgba(197, 163, 101, 0.55) 6px,
+    rgba(217, 169, 160, 0.5) 6px,
+    rgba(217, 169, 160, 0.5) 12px
+  );
+  clip-path: polygon(2% 0, 98% 4%, 100% 96%, 0 100%);
+}
+
+.rule-hand {
+  height: 2px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='6' viewBox='0 0 120 6'%3E%3Cpath d='M0 3 C 15 1.2, 30 4.6, 45 3 S 75 1.4, 90 3 S 110 4.4, 120 2.8' fill='none' stroke='%23a6b29a' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: 120px 6px;
+}
+
+/* ------------------------------------------------------------- motion */
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.8) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.05) rotate(8deg); }
+}
+@keyframes sway {
+  0%, 100% { transform: rotate(-2.5deg); }
+  50% { transform: rotate(2.5deg); }
+}
+@keyframes drift-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+@keyframes petal-fall {
+  0% { transform: translateY(-8vh) rotate(0deg); opacity: 0; }
+  12% { opacity: 1; }
+  100% { transform: translateY(105vh) rotate(320deg); opacity: 0; }
+}
+@keyframes star-pop {
+  0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+  60% { transform: scale(1.25) rotate(6deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes float-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes draw-line {
+  to { stroke-dashoffset: 0; }
+}
+
+.anim-twinkle { animation: twinkle 3.2s ease-in-out infinite; }
+.anim-sway { animation: sway 6s ease-in-out infinite; transform-origin: top center; }
+.anim-drift { animation: drift-y 7s ease-in-out infinite; }
+.anim-float-in { animation: float-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-star-pop { animation: star-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+.route-draw {
+  stroke-dasharray: 6 7;
+  animation: draw-line 2.4s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .anim-twinkle, .anim-sway, .anim-drift, .anim-float-in, .anim-star-pop, .route-draw {
+    animation: none !important;
+  }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* ------------------------------------------------------------- forms */
+
+.field-label {
+  display: block;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+}
+
+.field-input {
+  width: 100%;
+  background: var(--color-paper);
+  border: 1px solid rgba(68, 58, 50, 0.22);
+  border-radius: 5px 8px 6px 9px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.95rem;
+  color: var(--color-ink);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.field-input::placeholder { color: var(--color-ink-faint); }
+.field-input:focus {
+  outline: none;
+  border-color: var(--color-sage);
+  box-shadow: 0 0 0 3px rgba(166, 178, 154, 0.25);
+}
+
+/* ------------------------------------------------------------- misc */
+
+.scroll-slim { scrollbar-width: thin; scrollbar-color: var(--color-sage) transparent; }
+
+.tilt-l { transform: rotate(-0.7deg); }
+.tilt-r { transform: rotate(0.6deg); }
+
+@media (min-width: 768px) {
+  .tilt-l:hover, .tilt-r:hover { transform: rotate(0deg); }
+}
