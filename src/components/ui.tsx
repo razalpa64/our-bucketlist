@@ -82,7 +82,10 @@ export function Modal({
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         ) ?? []
       ).filter((f) => !f.hasAttribute("disabled"));
-    setTimeout(() => focusables()[0]?.focus(), 30);
+    const isTouch = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
+    if (!isTouch) {
+      setTimeout(() => focusables()[0]?.focus(), 30);
+    }
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -113,7 +116,7 @@ export function Modal({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[80] flex items-end justify-center overflow-y-auto p-3 sm:items-center sm:p-6"
+          className="fixed inset-0 z-[80] flex items-center justify-center overflow-y-auto p-3 overscroll-contain sm:p-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -128,7 +131,7 @@ export function Modal({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 18, scale: 0.98 }}
             transition={{ type: "spring", stiffness: 320, damping: 30 }}
-            className={`paper-card-deep relative my-auto w-full ${wide ? "max-w-3xl" : "max-w-xl"} max-h-[88vh] overflow-y-auto scroll-slim`}
+            className={`paper-card-deep relative my-auto w-full ${wide ? "max-w-3xl" : "max-w-xl"} max-h-[92vh] sm:max-h-[88vh] overflow-y-auto scroll-slim overscroll-contain`}
           >
             {children}
           </motion.div>

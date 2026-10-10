@@ -112,11 +112,32 @@ export function Notes({ ws }: { ws: Workspace }) {
           <div className="mt-5 grid gap-4">
             <div>
               <label className="field-label" htmlFor="nt-title">Title *</label>
-              <input id="nt-title" className="field-input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Something I want us to try…" maxLength={140} />
+              <input
+                id="nt-title"
+                className="field-input"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Something I want us to try…"
+                maxLength={140}
+                autoComplete="off"
+                autoCapitalize="sentences"
+                autoCorrect="on"
+                spellCheck="true"
+              />
             </div>
             <div>
               <label className="field-label" htmlFor="nt-content">The note itself.</label>
-              <textarea id="nt-content" className="field-input min-h-28" value={content} onChange={(e) => setContent(e.target.value)} />
+              <textarea
+                id="nt-content"
+                className="field-input min-h-28 resize-y"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="Write your little note here…"
+                autoComplete="off"
+                autoCapitalize="sentences"
+                autoCorrect="on"
+                spellCheck="true"
+              />
             </div>
             <label className="flex items-center gap-2 text-sm text-ink-soft">
               <input type="checkbox" checked={surprise} onChange={(e) => setSurprise(e.target.checked)} className="h-4 w-4 accent-terracotta" />

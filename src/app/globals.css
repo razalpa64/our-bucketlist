@@ -184,16 +184,24 @@ body::before {
   background: var(--color-paper);
   border: 1px solid rgba(68, 58, 50, 0.22);
   border-radius: 5px 8px 6px 9px;
-  padding: 0.55rem 0.8rem;
-  font-size: 0.95rem;
+  padding: 0.6rem 0.85rem;
+  font-size: 1rem; /* Minimum 16px prevents iOS Safari & Chrome from auto-zooming and shaking */
   color: var(--color-ink);
   transition: border-color 0.2s, box-shadow 0.2s;
+  touch-action: manipulation;
 }
 .field-input::placeholder { color: var(--color-ink-faint); }
 .field-input:focus {
   outline: none;
   border-color: var(--color-sage);
   box-shadow: 0 0 0 3px rgba(166, 178, 154, 0.25);
+}
+
+@media (max-width: 640px) {
+  input, textarea, select {
+    font-size: 16px !important; /* Strict 16px rule eliminates mobile keyboard displacement */
+    touch-action: manipulation;
+  }
 }
 
 /* ------------------------------------------------------------- misc */
