@@ -12,7 +12,8 @@ import { Dreams } from "@/components/Dreams";
 import { DreamDetail, CompleteDialog, Celebration } from "@/components/DreamDetail";
 import { DreamForm, type DreamFormState } from "@/components/DreamForm";
 import { Done } from "@/components/Done";
-import { SavingsGoals } from "@/components/SavingsGoals";
+import { Photos } from "@/components/Photos";
+import { Songs } from "@/components/Songs";
 import { CalendarSection } from "@/components/Calendar";
 import { FutureLetters } from "@/components/FutureLetters";
 import { Places } from "@/components/Places";
@@ -60,7 +61,8 @@ export default function Home() {
           <nav className="ml-auto hidden items-center gap-4 text-xs font-medium tracking-wide text-ink-soft md:flex" aria-label="Chapters">
             <a className="hover:text-forest" href="#dreams">Dreams</a>
             <a className="hover:text-forest" href="#done">Keepsake</a>
-            <a className="hover:text-forest" href="#savings">Saving</a>
+            <a className="hover:text-forest" href="#album">Album</a>
+            <a className="hover:text-forest" href="#songs">Songs</a>
             <a className="hover:text-forest" href="#calendar">Calendar</a>
             <a className="hover:text-forest" href="#future-letters">Time Capsule</a>
             <a className="hover:text-forest" href="#places">Places</a>
@@ -84,7 +86,8 @@ export default function Home() {
 
       <Dreams ws={ws} onAdd={openAdd} onOpen={setDetail} />
       <Done ws={ws} onOpen={setDetail} />
-      <SavingsGoals ws={ws} />
+      <Photos ws={ws} />
+      <Songs ws={ws} />
       <CalendarSection ws={ws} />
       <FutureLetters ws={ws} />
       <Places

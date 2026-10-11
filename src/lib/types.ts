@@ -39,7 +39,6 @@ export type Dream = {
   completion_note: string | null;
   completion_image_path: string | null;
   image_path: string | null;
-  estimated_budget: number | null;
   private_note: string | null;
   tags: string[];
   doodle?: string | null;
@@ -95,35 +94,6 @@ export type FutureLetter = {
   updated_at: string;
 };
 
-export type CurrencyCode = "INR" | "PHP" | "USD" | "EUR" | "GBP";
-
-export type SavingsGoalCategory = "tickets" | "trip" | "experience" | "stay" | "special";
-
-export type SavingsGoal = {
-  id: string;
-  relationship_id: string;
-  bucket_list_item_id: string | null;
-  title: string;
-  target_amount: number;
-  currency: CurrencyCode;
-  category: SavingsGoalCategory;
-  notes: string | null;
-  created_by: string;
-  created_at: string;
-  updated_at: string;
-};
-
-export type SavingsContribution = {
-  id: string;
-  goal_id: string;
-  relationship_id: string;
-  user_id: string;
-  amount: number;
-  currency: CurrencyCode;
-  note: string | null;
-  created_at: string;
-};
-
 export type CalendarPlanType = "tentative" | "planned" | "confirmed" | "anniversary" | "trip";
 
 export type CalendarPlan = {
@@ -141,6 +111,27 @@ export type CalendarPlan = {
   updated_at: string;
 };
 
+export type MemoryPhoto = {
+  id: string;
+  relationship_id: string;
+  image_path: string;
+  caption: string | null;
+  taken_on: string | null;
+  created_by: string;
+  created_at: string;
+};
+
+export type FavoriteSong = {
+  id: string;
+  relationship_id: string;
+  title: string;
+  artist: string | null;
+  link: string | null;
+  note: string | null;
+  created_by: string;
+  created_at: string;
+};
+
 export type WorkspaceData = {
   relationship: Relationship | null;
   profiles: Profile[];
@@ -150,7 +141,7 @@ export type WorkspaceData = {
   places: Place[];
   notes: SharedNote[];
   futureLetters: FutureLetter[];
-  savingsGoals: SavingsGoal[];
-  savingsContributions: SavingsContribution[];
   calendarPlans: CalendarPlan[];
+  memoryPhotos: MemoryPhoto[];
+  favoriteSongs: FavoriteSong[];
 };

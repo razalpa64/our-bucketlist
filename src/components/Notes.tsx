@@ -46,7 +46,7 @@ export function Notes({ ws }: { ws: Workspace }) {
   };
 
   return (
-    <section id="notes" className="relative mt-28 scroll-mt-24 bg-rose-soft/30 py-20">
+    <section id="notes" className="wash-rose relative mt-28 scroll-mt-24 py-20">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading eyebrow="Between the pages" title={SITE.notesHeading} sub={SITE.notesSub} />
 

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import type { Dream } from "@/lib/types";
-import { CATEGORY_ART, PRIORITY_META, STATUS_META } from "@/lib/config";
+import { CATEGORY_ART, PRIORITY_META, STATUS_META, chapterChip } from "@/lib/config";
 import type { Workspace } from "@/hooks/useWorkspace";
 import { fmtDate, todayInputValue } from "@/lib/format";
 import { Button, Confirm, Modal, SignedImg } from "./ui";
@@ -192,7 +192,7 @@ export function DreamDetail({
 
           <div className="p-7 md:p-9">
             <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em]">
-              {cat && <span className="rounded-full bg-sage-mist px-2.5 py-1 text-forest">{cat.name}</span>}
+              {cat && <span className={`rounded-full px-2.5 py-1 ${chapterChip(cat.icon)}`}>{cat.name}</span>}
               <span className="rounded-full bg-rose-soft px-2.5 py-1 text-terracotta-deep">{STATUS_META[live.status].label}</span>
               <span className="text-ink-faint">{PRIORITY_META[live.priority].label} · {PRIORITY_META[live.priority].hint}</span>
             </div>
@@ -206,7 +206,6 @@ export function DreamDetail({
               <div className="flex gap-2"><dt className="w-24 shrink-0 text-ink-faint">Dreamed by</dt><dd className="text-ink">{ws.authorOf(live.created_by)}, {fmtDate(live.created_at)}</dd></div>
               {live.target_date && <div className="flex gap-2"><dt className="w-24 shrink-0 text-ink-faint">Someday around</dt><dd className="text-ink">{fmtDate(live.target_date)}</dd></div>}
               {live.location_name && <div className="flex gap-2"><dt className="w-24 shrink-0 text-ink-faint">Where</dt><dd className="text-ink">{live.location_name}</dd></div>}
-              {live.estimated_budget != null && <div className="flex gap-2"><dt className="w-24 shrink-0 text-ink-faint">Rough budget</dt><dd className="text-ink">{live.estimated_budget.toLocaleString()}</dd></div>}
               {live.tags.length > 0 && (
                 <div className="flex gap-2 sm:col-span-2"><dt className="w-24 shrink-0 text-ink-faint">Tags</dt><dd className="flex flex-wrap gap-1.5">{live.tags.map((t) => <span key={t} className="rounded-full border border-sage/60 px-2 py-0.5 text-xs text-forest">{t}</span>)}</dd></div>
               )}

@@ -47,7 +47,7 @@ export function KeepsakeBookModal({
         {/* Header Controls */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink/10 pb-4 print:hidden">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">📖</span>
+            <FlowerDoodle className="h-7 w-7 text-terracotta" />
             <div>
               <h2 id="keepsake-book-title" className="font-serif text-2xl font-bold text-forest sm:text-3xl">
                 The Book We Write Together
@@ -60,7 +60,7 @@ export function KeepsakeBookModal({
 
           <div className="flex items-center gap-2">
             <Button variant="accent" size="sm" onClick={handlePrint}>
-              <span>🖨️</span> Print / Export PDF
+              Print / save as PDF
             </Button>
             <Button variant="soft" size="sm" onClick={onClose}>
               Close
@@ -70,7 +70,7 @@ export function KeepsakeBookModal({
 
         {completedDreams.length === 0 ? (
           <div className="py-16 text-center">
-            <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-sage-soft text-3xl">🌿</span>
+            <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-sage-mist"><FlowerDoodle className="h-7 w-7 text-forest" /></span>
             <p className="mt-4 font-serif text-2xl text-forest">Our storybook pages are still waiting.</p>
             <p className="mt-2 text-sm text-ink-soft">
               When dreams are marked completed, their memories, actual photos, dates, and drawings become chapters in this keepsake.

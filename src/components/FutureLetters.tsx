@@ -6,7 +6,7 @@ import type { Workspace } from "@/hooks/useWorkspace";
 import { fmtDate } from "@/lib/format";
 import { toast } from "@/lib/toast";
 import { Button, Confirm, Modal, SectionHeading } from "./ui";
-import { DoodleStar, DoodleHeart } from "./doodles";
+import { DoodleStar, DoodleHeart, EnvelopeDoodle } from "./doodles";
 
 export function FutureLetters({ ws }: { ws: Workspace }) {
   const [formOpen, setFormOpen] = useState(false);
@@ -63,7 +63,7 @@ export function FutureLetters({ ws }: { ws: Workspace }) {
   const letters = ws.data.futureLetters;
 
   return (
-    <section id="future-letters" className="relative mt-28 scroll-mt-24 bg-ochre-soft/30 py-20">
+    <section id="future-letters" className="wash-ochre relative mt-28 scroll-mt-24 py-20">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading
           eyebrow="Time Capsule"
@@ -103,8 +103,8 @@ export function FutureLetters({ ws }: { ws: Workspace }) {
                   
                   <div className="flex items-start justify-between gap-3">
                     <h3 className="font-serif text-xl font-semibold leading-snug text-forest">{l.title}</h3>
-                    <span className="shrink-0 text-xl" title={isRevealed ? "Unlocked" : "Sealed"}>
-                      {isRevealed ? "✨" : "🔒"}
+                    <span className="shrink-0" title={isRevealed ? "Unlocked" : "Sealed"}>
+                      {isRevealed ? <DoodleStar className="h-5 w-5 text-ochre" /> : <EnvelopeDoodle sealed className="h-6 w-8 text-ink-soft" />}
                     </span>
                   </div>
 

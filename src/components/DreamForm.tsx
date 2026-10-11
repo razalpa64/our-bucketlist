@@ -19,7 +19,6 @@ export function DreamForm({ ws, state, onClose }: { ws: Workspace; state: DreamF
   const [priority, setPriority] = useState<Priority>("whenever");
   const [locationName, setLocationName] = useState("");
   const [targetDate, setTargetDate] = useState("");
-  const [budget, setBudget] = useState("");
   const [tags, setTags] = useState("");
   const [privateNote, setPrivateNote] = useState("");
   const [favorite, setFavorite] = useState(false);
@@ -36,7 +35,6 @@ export function DreamForm({ ws, state, onClose }: { ws: Workspace; state: DreamF
     setPriority(editing?.priority ?? "whenever");
     setLocationName(editing?.location_name ?? "");
     setTargetDate(editing?.target_date ?? "");
-    setBudget(editing?.estimated_budget != null ? String(editing.estimated_budget) : "");
     setTags((editing?.tags ?? []).join(", "));
     setPrivateNote(editing?.private_note ?? "");
     setFavorite(editing ? ws.myFavorite(editing.id) : false);
@@ -68,7 +66,6 @@ export function DreamForm({ ws, state, onClose }: { ws: Workspace; state: DreamF
         priority,
         location_name: locationName.trim() || null,
         target_date: targetDate || null,
-        estimated_budget: budget.trim() === "" ? null : Number(budget),
         tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
         private_note: privateNote.trim() || null,
         image_path: imagePath ?? null,
@@ -151,11 +148,6 @@ export function DreamForm({ ws, state, onClose }: { ws: Workspace; state: DreamF
           <div>
             <label className="field-label" htmlFor="df-date">Choose an optional date.</label>
             <input id="df-date" type="date" className="field-input" value={targetDate} onChange={(e) => setTargetDate(e.target.value)} />
-          </div>
-
-          <div>
-            <label className="field-label" htmlFor="df-budget">Rough budget, if any.</label>
-            <input id="df-budget" type="number" min={0} className="field-input" value={budget} onChange={(e) => setBudget(e.target.value)} placeholder="0" />
           </div>
 
           <div>

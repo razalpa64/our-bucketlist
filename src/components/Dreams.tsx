@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import type { Dream } from "@/lib/types";
-import { CATEGORY_ART, PRIORITY_META, SITE } from "@/lib/config";
+import { CATEGORY_ART, PRIORITY_META, SITE, chapterChip } from "@/lib/config";
 import type { Workspace } from "@/hooks/useWorkspace";
 import { timeAgo } from "@/lib/format";
 import { Button, Chip, Modal, SignedImg } from "./ui";
@@ -243,7 +243,7 @@ export function DreamCard({ d, i, ws, onOpen }: { d: Dream; i: number; ws: Works
 
         <div className="p-5">
           <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em]">
-            {cat && <span className="rounded-full bg-sage-mist px-2 py-0.5 text-forest">{cat.name}</span>}
+            {cat && <span className={`rounded-full px-2 py-0.5 ${chapterChip(cat.icon)}`}>{cat.name}</span>}
             <span className="text-ink-faint">{PRIORITY_META[d.priority]?.label}</span>
             {d.status === "planned" && (
               <span className="ml-auto -rotate-3 rounded-sm border border-ochre px-1.5 py-0.5 text-ochre">planned</span>

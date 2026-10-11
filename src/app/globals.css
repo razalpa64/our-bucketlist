@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-paper: #f7f2e8;
+  --color-paper: #f6efe2;
   --color-ivory: #fffdf7;
   --color-forest: #354a3c;
   --color-forest-deep: #26382c;
@@ -33,6 +33,12 @@ html {
 
 body {
   background-color: var(--color-paper);
+  background-image:
+    radial-gradient(70% 45% at 8% 0%, rgba(230, 215, 184, 0.38), transparent 70%),
+    radial-gradient(55% 40% at 100% 35%, rgba(204, 212, 194, 0.38), transparent 70%),
+    radial-gradient(60% 42% at 0% 72%, rgba(236, 216, 211, 0.34), transparent 70%),
+    radial-gradient(50% 36% at 100% 100%, rgba(230, 215, 184, 0.3), transparent 72%);
+  background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -213,6 +219,72 @@ body::before {
 
 @media (min-width: 768px) {
   .tilt-l:hover, .tilt-r:hover { transform: rotate(0deg); }
+}
+
+/* ------------------------------------------------------------- painted surfaces
+   Watercolour washes sit behind sections instead of flat tinted boxes, and
+   photographs are hung like prints with an ivory mat and a fine gilt keyline. */
+
+.wash-rose {
+  background-color: #f3e6e0;
+  background-image:
+    radial-gradient(60% 55% at 8% 14%, rgba(217, 169, 160, 0.38), transparent 70%),
+    radial-gradient(48% 46% at 94% 86%, rgba(230, 215, 184, 0.5), transparent 72%),
+    radial-gradient(35% 40% at 58% 40%, rgba(236, 216, 211, 0.55), transparent 75%);
+}
+
+.wash-sage {
+  background-color: #eef0e6;
+  background-image:
+    radial-gradient(58% 52% at 92% 10%, rgba(166, 178, 154, 0.36), transparent 70%),
+    radial-gradient(46% 44% at 6% 92%, rgba(230, 215, 184, 0.45), transparent 72%),
+    radial-gradient(30% 36% at 46% 52%, rgba(204, 212, 194, 0.4), transparent 76%);
+}
+
+.wash-ochre {
+  background-color: #f5ead2;
+  background-image:
+    radial-gradient(56% 50% at 4% 12%, rgba(197, 163, 101, 0.3), transparent 70%),
+    radial-gradient(44% 42% at 96% 88%, rgba(230, 215, 184, 0.55), transparent 72%),
+    radial-gradient(34% 40% at 60% 46%, rgba(245, 234, 210, 0.7), transparent 76%);
+}
+
+.picture-mat {
+  position: relative;
+  padding: 0.75rem;
+  background: var(--color-ivory);
+  border-radius: 3px;
+  box-shadow: var(--shadow-paper);
+  border: 1px solid rgba(68, 58, 50, 0.12);
+}
+.picture-mat::after {
+  /* the fine gilt keyline a framer leaves inside the mat */
+  content: "";
+  position: absolute;
+  inset: 0.42rem;
+  border: 1px solid rgba(197, 163, 101, 0.5);
+  border-radius: 1px;
+  pointer-events: none;
+}
+.picture-mat:focus-visible { outline-offset: 5px; }
+
+.songbook {
+  background: linear-gradient(180deg, rgba(255, 253, 247, 0.97), rgba(255, 253, 247, 0.92));
+  border: 1px solid rgba(68, 58, 50, 0.14);
+  border-radius: 4px 12px 6px 14px;
+  box-shadow: var(--shadow-lift);
+}
+.songbook::before {
+  content: "";
+  position: absolute;
+  inset: 0.6rem;
+  border: 1px solid rgba(197, 163, 101, 0.42);
+  border-radius: 3px 9px 4px 11px;
+  pointer-events: none;
+}
+
+.songlist > li + li {
+  border-top: 1px dashed rgba(68, 58, 50, 0.18);
 }
 
 @media print {

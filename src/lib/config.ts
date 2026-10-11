@@ -20,6 +20,10 @@ export const SITE = {
   doneSub: "Every little dream that found its way into real life.",
   placesHeading: "Places We Want to Find",
   placesSub: "Little pins on a map we're drawing together.",
+  photosHeading: "Pictures of Us",
+  photosSub: "The faces we miss, the places we shared, and the little moments we want to keep, framed and kept just for us.",
+  songsHeading: "Songs That Are Ours",
+  songsSub: "The songs that remind us of each other, with a little note on why. Play them on the quiet nights.",
   notesHeading: "Little Things I Want You to Know",
   notesSub: "Small letters tucked between the pages of our book.",
   closingHeading: "And this is only the beginning.",
@@ -61,6 +65,26 @@ export const CATEGORY_ART: Record<string, string> = {
   surprises: "/art/vignette-surprises.jpg",
   other: "/art/vignette-other.jpg",
 };
+
+// Each chapter gets its own pigment, so the page reads like a painted book.
+export function chapterChip(icon?: string | null): string {
+  switch (icon) {
+    case "firsts":
+      return "bg-rose-soft text-terracotta-deep";
+    case "everyday":
+      return "bg-sage-mist text-forest";
+    case "cozy":
+      return "bg-ochre-soft text-[#6f5426]";
+    case "places":
+      return "bg-terracotta/15 text-terracotta-deep";
+    case "games":
+      return "bg-sage-soft text-forest-deep";
+    case "future":
+      return "bg-forest/15 text-forest-deep";
+    default:
+      return "bg-sage-mist text-forest";
+  }
+}
 
 export const POSTCARD_ART = [
   "/art/postcard-coast.jpg",

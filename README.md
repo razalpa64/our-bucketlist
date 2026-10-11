@@ -14,7 +14,7 @@ A private, living storybook for two people — built for **Razal & Julian**, two
 - **Next.js 16 + React 19 + TypeScript + Tailwind CSS 4 + motion** (animations, reduced-motion aware)
 - **Supabase** — Auth, Postgres with Row Level Security, Realtime, private Storage
 - Hand-painted gouache artwork throughout (hero landscape, stamps, chapter vignettes, postcards, botanicals)
-- Sections: hero & live summary · dream collection · completed scrapbook · places map · little notes · closing
+- Sections: hero & live summary · dream collection · completed scrapbook · photo album · favourite songs · calendar · time capsule · places map · little notes · closing
 - Realtime sync: whatever one partner writes appears on the other's screen within a moment
 
 ## The two accounts (this deployment)
@@ -56,7 +56,10 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_…
 2. **Apply migrations** in order, in the SQL editor (or `psql`):
    - `supabase/migrations/0001_init.sql` — schema, RLS, realtime publication, storage bucket + policies
    - `supabase/migrations/0002_defaults.sql` — `created_by` defaults
-   - `supabase/migrations/0003_budget.sql` — estimated budget column
+   - `supabase/migrations/0003_budget.sql` — estimated budget column (later removed by 0006)
+   - `supabase/migrations/0004_features.sql` — time capsule, calendar, doodles
+   - `supabase/migrations/0005_fix_rls.sql` — default authorship columns
+   - `supabase/migrations/0006_memories_and_songs.sql` — **removes** the savings / expense tracking (tables and the budget column), adds the photo album (`memory_photos`) and favourite songs (`favorite_songs`)
 3. **Create `.env.setup`** (never committed; see `.gitignore`):
 
    ```

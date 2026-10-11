@@ -78,7 +78,8 @@ export function Places({ ws, onOpenDreamTitle }: { ws: Workspace; onOpenDreamTit
   };
 
   return (
-    <section id="places" className="mx-auto max-w-6xl scroll-mt-24 px-6 pt-28">
+    <section id="places" className="wash-sage relative mt-28 scroll-mt-24 py-24">
+    <div className="mx-auto max-w-6xl px-6">
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div className="text-left">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-terracotta">Chapter three</p>
@@ -216,6 +217,7 @@ export function Places({ ws, onOpenDreamTitle }: { ws: Workspace; onOpenDreamTit
         confirmLabel="Remove pin"
         onConfirm={() => toDelete && ws.actions.deletePlace(toDelete.id)}
       />
+    </div>
     </section>
   );
 }
