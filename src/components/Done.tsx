@@ -15,14 +15,14 @@ export function Done({ ws, onOpen }: { ws: Workspace; onOpen: (d: Dream) => void
   const done = ws.data.dreams.filter((d) => d.status === "completed");
 
   return (
-    <section id="done" className="relative mt-28 scroll-mt-24 bg-sage-mist/50 py-20">
+    <section id="done" className="wash-sage relative mt-28 scroll-mt-24 py-20">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading eyebrow="The book we write together" title="The memories we've made" sub="Completed dreams become illustrated pages in our growing storybook. Add actual photos, words, dates, and little drawings — or export them into a printable keepsake." />
 
         {done.length > 0 && (
           <div className="mb-10 text-center">
             <Button variant="accent" onClick={() => setKeepsakeOpen(true)}>
-              <span>📖</span> Open Keepsake Book & Printable Album
+              Open the keepsake book
             </Button>
           </div>
         )}

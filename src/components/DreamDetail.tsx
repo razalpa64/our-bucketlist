@@ -206,7 +206,6 @@ export function DreamDetail({
               <div className="flex gap-2"><dt className="w-24 shrink-0 text-ink-faint">Dreamed by</dt><dd className="text-ink">{ws.authorOf(live.created_by)}, {fmtDate(live.created_at)}</dd></div>
               {live.target_date && <div className="flex gap-2"><dt className="w-24 shrink-0 text-ink-faint">Someday around</dt><dd className="text-ink">{fmtDate(live.target_date)}</dd></div>}
               {live.location_name && <div className="flex gap-2"><dt className="w-24 shrink-0 text-ink-faint">Where</dt><dd className="text-ink">{live.location_name}</dd></div>}
-              {live.estimated_budget != null && <div className="flex gap-2"><dt className="w-24 shrink-0 text-ink-faint">Rough budget</dt><dd className="text-ink">{live.estimated_budget.toLocaleString()}</dd></div>}
               {live.tags.length > 0 && (
                 <div className="flex gap-2 sm:col-span-2"><dt className="w-24 shrink-0 text-ink-faint">Tags</dt><dd className="flex flex-wrap gap-1.5">{live.tags.map((t) => <span key={t} className="rounded-full border border-sage/60 px-2 py-0.5 text-xs text-forest">{t}</span>)}</dd></div>
               )}

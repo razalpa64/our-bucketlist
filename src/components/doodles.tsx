@@ -118,3 +118,13 @@ export function SunDoodle({ className, style }: P) {
 }
 
 
+
+export function NoteDoodle({ className, style }: P) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} style={style} aria-hidden fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 17.5 V5.2 L19 3.2 V15.4" />
+      <ellipse cx="6.8" cy="17.6" rx="2.4" ry="2" fill="currentColor" stroke="none" />
+      <ellipse cx="16.8" cy="15.6" rx="2.4" ry="2" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}

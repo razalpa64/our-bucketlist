@@ -42,7 +42,7 @@ const dreams = [
   { title: "QA· Watch the sunset together", description: "Somewhere quiet, with snacks.", category_id: C("cozy"), priority: "whenever" },
   { title: "QA· Cook a meal together", description: "Adobo one half, biryani the other.", category_id: C("food"), priority: "whenever", private_note: "I already know you'll make it too spicy and I'll pretend to complain." },
   { title: "QA· Play chess sitting beside each other", category_id: C("games"), priority: "someday" },
-  { title: "QA· Take a train journey", description: "Window seats, shared earphones, a playlist we made.", category_id: C("adventures"), priority: "someday", tags: ["slow travel"], estimated_budget: 120 },
+  { title: "QA· Take a train journey", description: "Window seats, shared earphones, a playlist we made.", category_id: C("adventures"), priority: "someday", tags: ["slow travel"] },
   { title: "QA· Have a little picnic", category_id: C("food"), priority: "whenever", status: "planned", location_name: "Camiguin" },
 ];
 

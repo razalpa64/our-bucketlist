@@ -13,9 +13,9 @@ import type {
   Relationship,
   SharedNote,
   FutureLetter,
-  SavingsGoal,
-  SavingsContribution,
   CalendarPlan,
+  MemoryPhoto,
+  FavoriteSong,
   WorkspaceData,
 } from "@/lib/types";
 
@@ -30,9 +30,9 @@ const EMPTY: WorkspaceData = {
   places: [],
   notes: [],
   futureLetters: [],
-  savingsGoals: [],
-  savingsContributions: [],
   calendarPlans: [],
+  memoryPhotos: [],
+  favoriteSongs: [],
 };
 
 function upsert<T extends { id: string }>(rows: T[], row: T): T[] {
@@ -91,7 +91,7 @@ export function useWorkspace() {
     }
     relIdRef.current = relId;
 
-    const [rel, profiles, categories, dreams, favorites, places, notes, futureLetters, savingsGoals, savingsContribs, calendarPlans, myProfile] =
+    const [rel, profiles, categories, dreams, favorites, places, notes, futureLetters, calendarPlans, memoryPhotos, favoriteSongs, myProfile] =
       await Promise.all([
         sb.from("relationships").select("*").eq("id", relId).maybeSingle(),
         sb.from("profiles").select("*").order("created_at"),
@@ -101,9 +101,9 @@ export function useWorkspace() {
         sb.from("locations").select("*").eq("relationship_id", relId).order("created_at", { ascending: false }),
         sb.from("shared_notes").select("*").eq("relationship_id", relId).order("created_at", { ascending: false }),
         sb.from("future_letters").select("*").eq("relationship_id", relId).order("reveal_at", { ascending: true }),
-        sb.from("savings_goals").select("*").eq("relationship_id", relId).order("created_at", { ascending: false }),
-        sb.from("savings_contributions").select("*").eq("relationship_id", relId).order("created_at", { ascending: false }),
         sb.from("calendar_plans").select("*").eq("relationship_id", relId).order("start_date", { ascending: true }),
+        sb.from("memory_photos").select("*").eq("relationship_id", relId).order("taken_on", { ascending: false, nullsFirst: false }).order("created_at", { ascending: false }),
+        sb.from("favorite_songs").select("*").eq("relationship_id", relId).order("created_at", { ascending: true }),
         sb.from("profiles").select("*").eq("id", uid).maybeSingle(),
       ]);
 
@@ -117,16 +117,16 @@ export function useWorkspace() {
       places: places.data ?? [],
       notes: notes.data ?? [],
       futureLetters: futureLetters.data ?? [],
-      savingsGoals: savingsGoals.data ?? [],
-      savingsContributions: savingsContribs.data ?? [],
       calendarPlans: calendarPlans.data ?? [],
+      memoryPhotos: memoryPhotos.data ?? [],
+      favoriteSongs: favoriteSongs.data ?? [],
     });
     setMe(myProfile.data ?? { id: uid, display_name: session.user.email?.split("@")[0] ?? "me", avatar_url: null, created_at: new Date().toISOString() });
     setLoading(false);
 
     // ------------------------------------------------ realtime
     const apply =
-      (key: "dreams" | "categories" | "places" | "notes" | "futureLetters" | "savingsGoals" | "savingsContributions" | "calendarPlans") =>
+      (key: "dreams" | "categories" | "places" | "notes" | "futureLetters" | "calendarPlans" | "memoryPhotos" | "favoriteSongs") =>
       (payload: { eventType: string; new: unknown; old: unknown }) => {
         setData((prev) => {
           if (payload.eventType === "DELETE") {
@@ -145,9 +145,9 @@ export function useWorkspace() {
       .on("postgres_changes", { event: "*", schema: "public", table: "locations", filter: `relationship_id=eq.${relId}` }, apply("places"))
       .on("postgres_changes", { event: "*", schema: "public", table: "shared_notes", filter: `relationship_id=eq.${relId}` }, apply("notes"))
       .on("postgres_changes", { event: "*", schema: "public", table: "future_letters", filter: `relationship_id=eq.${relId}` }, apply("futureLetters"))
-      .on("postgres_changes", { event: "*", schema: "public", table: "savings_goals", filter: `relationship_id=eq.${relId}` }, apply("savingsGoals"))
-      .on("postgres_changes", { event: "*", schema: "public", table: "savings_contributions", filter: `relationship_id=eq.${relId}` }, apply("savingsContributions"))
       .on("postgres_changes", { event: "*", schema: "public", table: "calendar_plans", filter: `relationship_id=eq.${relId}` }, apply("calendarPlans"))
+      .on("postgres_changes", { event: "*", schema: "public", table: "memory_photos", filter: `relationship_id=eq.${relId}` }, apply("memoryPhotos"))
+      .on("postgres_changes", { event: "*", schema: "public", table: "favorite_songs", filter: `relationship_id=eq.${relId}` }, apply("favoriteSongs"))
       .on("postgres_changes", { event: "*", schema: "public", table: "relationships", filter: `id=eq.${relId}` }, (payload: { eventType: string; new: unknown }) => {
         if (payload.eventType !== "DELETE") {
           setData((prev) => ({ ...prev, relationship: payload.new as Relationship }));
@@ -214,13 +214,13 @@ export function useWorkspace() {
   }, []);
 
   const uploadImage = useCallback(
-    async (file: File): Promise<string> => {
+    async (file: File, maxMb = 4): Promise<string> => {
       const relId = relIdRef.current;
       if (!relId || !me) throw new Error("Not signed in");
       if (!["image/jpeg", "image/png", "image/webp", "image/gif"].includes(file.type)) {
         throw new Error("Please choose a JPG, PNG, WebP or GIF image.");
       }
-      if (file.size > 4 * 1024 * 1024) throw new Error("Let's keep images under 4 MB.");
+      if (file.size > maxMb * 1024 * 1024) throw new Error(`Let's keep images under ${maxMb} MB.`);
       const safe = file.name.replace(/[^a-z0-9.-]+/gi, "-").slice(-40);
       const path = `${relId}/${me.id}/${Date.now()}-${safe}`;
       const { error } = await supabase().storage.from("dream-media").upload(path, file, { upsert: false });
@@ -392,41 +392,63 @@ export function useWorkspace() {
     return guard(error, "Time capsule letter removed.");
   }, []);
 
-  const addSavingsGoal = useCallback(async (input: Partial<SavingsGoal>) => {
+  const addPhoto = useCallback(
+    async (file: File, meta: { caption?: string | null; taken_on?: string | null }): Promise<boolean> => {
+      const relId = relIdRef.current;
+      if (!relId || !me) return false;
+      let path: string;
+      try {
+        path = await uploadImage(file, 10);
+      } catch (e) {
+        toast(e instanceof Error ? e.message : "That photo didn't upload.", "error");
+        return false;
+      }
+      const { error } = await supabase().from("memory_photos").insert({
+        relationship_id: relId,
+        image_path: path,
+        caption: meta.caption ?? null,
+        taken_on: meta.taken_on ?? null,
+        created_by: me.id,
+      });
+      if (error) {
+        await supabase().storage.from("dream-media").remove([path]);
+        return guard(error) as boolean;
+      }
+      return guard(null, "Tucked into our album.");
+    },
+    [me, uploadImage]
+  );
+
+  const updatePhoto = useCallback(async (id: string, patch: Pick<MemoryPhoto, "caption" | "taken_on">) => {
+    const { error } = await supabase().from("memory_photos").update(patch).eq("id", id);
+    return guard(error, "Photo updated.");
+  }, []);
+
+  const deletePhoto = useCallback(async (photo: MemoryPhoto) => {
+    const { error } = await supabase().from("memory_photos").delete().eq("id", photo.id);
+    if (!error) await supabase().storage.from("dream-media").remove([photo.image_path]);
+    return guard(error, "Photo removed from the album.");
+  }, []);
+
+  const addSong = useCallback(async (input: Partial<FavoriteSong>) => {
     const relId = relIdRef.current;
-    if (!relId) return;
-    const { error } = await supabase().from("savings_goals").insert({
+    if (!relId) return false;
+    const { error } = await supabase().from("favorite_songs").insert({
       ...input,
       relationship_id: relId,
       ...(me?.id ? { created_by: me.id } : {}),
     });
-    return guard(error, "Savings goal tucked in.");
+    return guard(error, "Added to our songs.");
   }, [me?.id]);
 
-  const updateSavingsGoal = useCallback(async (id: string, patch: Partial<SavingsGoal>) => {
-    const { error } = await supabase().from("savings_goals").update(patch).eq("id", id);
-    return guard(error);
+  const updateSong = useCallback(async (id: string, patch: Partial<FavoriteSong>) => {
+    const { error } = await supabase().from("favorite_songs").update(patch).eq("id", id);
+    return guard(error, "Song updated.");
   }, []);
 
-  const deleteSavingsGoal = useCallback(async (id: string) => {
-    const { error } = await supabase().from("savings_goals").delete().eq("id", id);
-    return guard(error, "Savings goal removed.");
-  }, []);
-
-  const addContribution = useCallback(async (input: { goal_id: string; amount: number; currency: string; note?: string | null }) => {
-    const relId = relIdRef.current;
-    if (!relId) return;
-    const { error } = await supabase().from("savings_contributions").insert({
-      ...input,
-      relationship_id: relId,
-      ...(me?.id ? { user_id: me.id } : {}),
-    });
-    return guard(error, "Contribution logged with love.");
-  }, [me?.id]);
-
-  const deleteContribution = useCallback(async (id: string) => {
-    const { error } = await supabase().from("savings_contributions").delete().eq("id", id);
-    return guard(error, "Contribution removed.");
+  const deleteSong = useCallback(async (id: string) => {
+    const { error } = await supabase().from("favorite_songs").delete().eq("id", id);
+    return guard(error, "Song removed.");
   }, []);
 
   const addCalendarPlan = useCallback(async (input: Partial<CalendarPlan>) => {
@@ -505,11 +527,12 @@ export function useWorkspace() {
       addFutureLetter,
       updateFutureLetter,
       deleteFutureLetter,
-      addSavingsGoal,
-      updateSavingsGoal,
-      deleteSavingsGoal,
-      addContribution,
-      deleteContribution,
+      addPhoto,
+      updatePhoto,
+      deletePhoto,
+      addSong,
+      updateSong,
+      deleteSong,
       addCalendarPlan,
       updateCalendarPlan,
       deleteCalendarPlan,

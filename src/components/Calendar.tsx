@@ -6,44 +6,44 @@ import type { Workspace } from "@/hooks/useWorkspace";
 import { fmtDate } from "@/lib/format";
 import { toast } from "@/lib/toast";
 import { Button, Confirm, Modal, SectionHeading } from "./ui";
-import { DoodleStar, DoodleHeart } from "./doodles";
+import { DoodleStar, DoodleHeart, FlowerDoodle, MoonDoodle, SunDoodle } from "./doodles";
 
 const PLAN_META: Record<
   CalendarPlanType,
-  { label: string; badge: string; icon: string; bg: string; text: string }
+  { label: string; badge: string; icon: (p: { className?: string }) => React.ReactElement; bg: string; text: string }
 > = {
   tentative: {
     label: "Tentative Date",
     badge: "Tentative idea",
-    icon: "💭",
+    icon: MoonDoodle,
     bg: "bg-ochre-soft/60",
     text: "text-ink",
   },
   planned: {
     label: "Planned Trip / Date",
     badge: "Planned date",
-    icon: "🗓️",
+    icon: FlowerDoodle,
     bg: "bg-terracotta/15",
     text: "text-terracotta-deep",
   },
   confirmed: {
     label: "Confirmed Booking",
-    badge: "Confirmed booking ✈️",
-    icon: "🎟️",
+    badge: "Confirmed booking",
+    icon: DoodleStar,
     bg: "bg-forest/15",
     text: "text-forest-deep",
   },
   anniversary: {
     label: "Anniversary / Milestone",
-    badge: "Anniversary 💕",
-    icon: "💐",
+    badge: "Anniversary",
+    icon: DoodleHeart,
     bg: "bg-rose-soft/70",
     text: "text-terracotta-deep",
   },
   trip: {
     label: "Shared Vacation",
     badge: "Trip itinerary",
-    icon: "🏝️",
+    icon: SunDoodle,
     bg: "bg-sage-mist",
     text: "text-forest",
   },
@@ -155,7 +155,7 @@ export function CalendarSection({ ws }: { ws: Workspace }) {
                   {/* Header Badge */}
                   <div className="flex items-center justify-between gap-2">
                     <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${meta.bg} ${meta.text}`}>
-                      <span>{meta.icon}</span>
+                      <meta.icon className="h-3.5 w-3.5" />
                       <span>{meta.badge}</span>
                     </span>
                     <span className="text-[10px] uppercase tracking-wider text-ink-faint">
@@ -262,11 +262,11 @@ export function CalendarSection({ ws }: { ws: Workspace }) {
                 value={planType}
                 onChange={(e) => setPlanType(e.target.value as CalendarPlanType)}
               >
-                <option value="tentative">💭 Tentative idea (aiming for this month/date)</option>
-                <option value="planned">🗓️ Planned date (agreed upon, not yet booked)</option>
-                <option value="confirmed">🎟️ Confirmed booking ✈️ (tickets or hotel booked!)</option>
-                <option value="anniversary">💐 Anniversary / Special milestone</option>
-                <option value="trip">🏝️ Vacation / Shared itinerary</option>
+                <option value="tentative">Tentative idea (aiming for this month/date)</option>
+                <option value="planned">Planned date (agreed upon, not yet booked)</option>
+                <option value="confirmed">Confirmed booking (tickets or hotel booked!)</option>
+                <option value="anniversary">Anniversary / Special milestone</option>
+                <option value="trip">Vacation / Shared itinerary</option>
               </select>
             </div>
 
