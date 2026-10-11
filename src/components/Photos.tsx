@@ -42,12 +42,9 @@ export function Photos({ ws }: { ws: Workspace }) {
             <SprigLine className="mx-auto mt-6 h-5 w-36 text-sage" />
           </div>
         ) : (
-          <div className="columns-1 gap-7 sm:columns-2 lg:columns-3">
+          <div className="grid gap-x-7 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {photos.map((p, i) => (
-              <figure
-                key={p.id}
-                className={`mb-7 break-inside-avoid ${i % 3 === 1 ? "mt-4" : ""}`}
-              >
+              <figure key={p.id} className="min-w-0">
                 <button
                   type="button"
                   onClick={() => setViewing(p)}
@@ -60,7 +57,7 @@ export function Photos({ ws }: { ws: Workspace }) {
                     <SignedImg
                       path={p.image_path}
                       alt={p.caption ?? "A photograph of us"}
-                      className="block h-auto min-h-40 w-full transition-transform duration-700 group-hover:scale-[1.02]"
+                      className="block aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                     />
                   </div>
                   <span className="block px-1 pt-3">

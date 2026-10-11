@@ -33,6 +33,12 @@ html {
 
 body {
   background-color: var(--color-paper);
+  background-image:
+    radial-gradient(70% 45% at 8% 0%, rgba(230, 215, 184, 0.38), transparent 70%),
+    radial-gradient(55% 40% at 100% 35%, rgba(204, 212, 194, 0.38), transparent 70%),
+    radial-gradient(60% 42% at 0% 72%, rgba(236, 216, 211, 0.34), transparent 70%),
+    radial-gradient(50% 36% at 100% 100%, rgba(230, 215, 184, 0.3), transparent 72%);
+  background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -233,6 +239,14 @@ body::before {
     radial-gradient(58% 52% at 92% 10%, rgba(166, 178, 154, 0.36), transparent 70%),
     radial-gradient(46% 44% at 6% 92%, rgba(230, 215, 184, 0.45), transparent 72%),
     radial-gradient(30% 36% at 46% 52%, rgba(204, 212, 194, 0.4), transparent 76%);
+}
+
+.wash-ochre {
+  background-color: #f5ead2;
+  background-image:
+    radial-gradient(56% 50% at 4% 12%, rgba(197, 163, 101, 0.3), transparent 70%),
+    radial-gradient(44% 42% at 96% 88%, rgba(230, 215, 184, 0.55), transparent 72%),
+    radial-gradient(34% 40% at 60% 46%, rgba(245, 234, 210, 0.7), transparent 76%);
 }
 
 .picture-mat {

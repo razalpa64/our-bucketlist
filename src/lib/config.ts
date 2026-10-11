@@ -66,6 +66,26 @@ export const CATEGORY_ART: Record<string, string> = {
   other: "/art/vignette-other.jpg",
 };
 
+// Each chapter gets its own pigment, so the page reads like a painted book.
+export function chapterChip(icon?: string | null): string {
+  switch (icon) {
+    case "firsts":
+      return "bg-rose-soft text-terracotta-deep";
+    case "everyday":
+      return "bg-sage-mist text-forest";
+    case "cozy":
+      return "bg-ochre-soft text-[#6f5426]";
+    case "places":
+      return "bg-terracotta/15 text-terracotta-deep";
+    case "games":
+      return "bg-sage-soft text-forest-deep";
+    case "future":
+      return "bg-forest/15 text-forest-deep";
+    default:
+      return "bg-sage-mist text-forest";
+  }
+}
+
 export const POSTCARD_ART = [
   "/art/postcard-coast.jpg",
   "/art/postcard-oldtown.jpg",

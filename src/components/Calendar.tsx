@@ -115,7 +115,7 @@ export function CalendarSection({ ws }: { ws: Workspace }) {
   const plans = ws.data.calendarPlans.slice().sort((a, b) => a.start_date.localeCompare(b.start_date));
 
   return (
-    <section id="calendar" className="relative mt-28 scroll-mt-24 bg-sage-soft/20 py-20">
+    <section id="calendar" className="relative mt-28 scroll-mt-24 py-20">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading
           eyebrow="Dates & Milestones"

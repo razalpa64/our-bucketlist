@@ -63,7 +63,7 @@ export function FutureLetters({ ws }: { ws: Workspace }) {
   const letters = ws.data.futureLetters;
 
   return (
-    <section id="future-letters" className="relative mt-28 scroll-mt-24 bg-ochre-soft/30 py-20">
+    <section id="future-letters" className="wash-ochre relative mt-28 scroll-mt-24 py-20">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading
           eyebrow="Time Capsule"
